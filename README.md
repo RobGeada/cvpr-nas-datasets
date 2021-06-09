@@ -9,7 +9,10 @@ Here you'll find descriptions of all 6 of the datasets from the [CVPR-NAS 2021 C
 
 # Build The Datasets Yourself
 While this will not produce exact copies of the datasets from the competition (as some are dynamically generated each time
-and the train/test splits may vary), the scripts here will let you recreate each dataset. Run `python3 data_packager` 
+and the train/test splits may vary), the scripts here will let you recreate each dataset. Run:
+
+`python3 data_packager` 
+
 to produce the `.npy` and `metadata` files that you'll recognize from the competition. The exact datasets used in the competition
 will be uploaded to the competition page on CodaLab shortly.
 

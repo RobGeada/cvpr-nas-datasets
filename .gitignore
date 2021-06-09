@@ -1,0 +1,7 @@
+**/metadata
+**/*.npy
+raw_data/*
+*.DS_Store
+.idea/*
+.ipynb_checkpoints/*
+__pycache__/*

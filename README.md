@@ -7,6 +7,9 @@ Here you'll find descriptions of all 6 of the datasets from the [CVPR-NAS 2021 C
 * `torchvision`
 * `aspell` with the following languages installed: `['en', 'nl', 'de', 'es', 'fr', 'pt_PT', 'sw', 'zu', 'fi', 'sv']`
 
+# First Time Setup
+`mkdir raw_data`
+
 # Build The Datasets Yourself
 While this will not produce exact copies of the datasets from the competition (as some are dynamically generated each time
 and the train/test splits may vary), the scripts here will let you recreate each dataset. Run:

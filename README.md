@@ -8,6 +8,10 @@ Here you'll find descriptions of all 6 of the datasets from the [CVPR-NAS 2021 C
 * `aspell` with the following languages installed: `['en', 'nl', 'de', 'es', 'fr', 'pt_PT', 'sw', 'zu', 'fi', 'sv']`
 
 # First Time Setup
+`git clone robgeada/cvpr-nas-datasets`
+
+`cd cvpr-nas-datasets`
+
 `mkdir raw_data`
 
 # Build The Datasets Yourself

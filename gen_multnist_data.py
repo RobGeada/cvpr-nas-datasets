@@ -2,7 +2,7 @@ import collections
 import os
 from torchvision import datasets, transforms
 import numpy as np
-
+import math
 
 def train_test_filter(op, combs, ratio):
     paths = {}
@@ -39,14 +39,22 @@ def generate_examples(op, combs, weights, nums, n):
                 metainfo.append([n1,n2,n3])
         return x, y, metainfo
 
-
 def proc_weights(op, combs):
     weights = collections.Counter(op(i, j, k) for i, j, k in combs)
-    weights = {k: sum(weights.values()) / v for k, v in weights.items()}
-    return {k: v / min(weights.values()) for k, v in weights.items()}
+    weights = {k: 1/(len(weights)*v) for k,v in weights.items()}
+    return weights
 
 
-def generate_data(op, n, lb, ub):
+def class_balanced_truncater(x, y, total, nclasses):
+    outx, outy = [], []
+    for c in range(nclasses):
+        idxs = np.random.choice(np.where(y == c)[0], size=math.floor(total/nclasses))
+        outx.append(x[idxs])
+        outy.append(y[idxs])
+    return np.concatenate(outx), np.concatenate(outy)
+
+
+def generate_data(op, lb, ub):
     download = 'MNIST' not in os.listdir('raw_data')
     train_data = datasets.MNIST('raw_data/MNIST',
                                 train=True,
@@ -76,8 +84,8 @@ def generate_data(op, n, lb, ub):
     train_weights = proc_weights(op, train_combs)
     test_weights = proc_weights(op, test_combs)
 
-    train_n = n
-    test_n = int(.33 * train_n)
+    train_n = 60000
+    test_n = 10000
     train_x, train_y, metainfo = generate_examples(op,
                                          combs,
                                          train_weights,
@@ -89,8 +97,12 @@ def generate_data(op, n, lb, ub):
                                        test_nums,
                                        test_n)
 
+
     train_x, train_y = np.array(train_x, dtype=np.float32).squeeze(), np.array(train_y).squeeze()
     test_x, test_y = np.array(test_x, dtype=np.float32).squeeze(), np.array(test_y).squeeze()
+
+    train_x, train_y = class_balanced_truncater(train_x, train_y, train_n, len(train_weights))
+    test_x, test_y = class_balanced_truncater(test_x, test_y, test_n, len(test_weights))
 
     train_shuff = np.arange(len(train_y))
     np.random.shuffle(train_shuff)
@@ -103,10 +115,10 @@ def generate_data(op, n, lb, ub):
 
 def load_multnist_data():
     op = lambda i,j,k: (i * j * k) % 10
-    return generate_data(op, 20, 0, 9)
+    return generate_data(op, 0, 9)
 
 
 def load_addnist_data():
     op = lambda i,j,k: (i + j + k) - 1
-    return generate_data(op, 200, 0, 19)
+    return generate_data(op, 0, 19)
 

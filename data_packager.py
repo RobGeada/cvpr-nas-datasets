@@ -127,11 +127,11 @@ def process_torch_dataset(name, idx, location, verbose=False, return_data=False)
 
 if __name__ == '__main__':
     # load and save development datasets
-    process_torch_dataset("AddNIST", 0, location='devel')       # development 0
+    process_torch_dataset("AddNIST", 0, location='devel', verbose=True)       # development 0
+    process_torch_dataset("MultNIST", 0, location='eval', verbose=True)  # evaluation 0
     process_torch_dataset('FashionMNIST', 1, location='devel')  # development 1
     process_torch_dataset('Language', 2, location='devel')      # development 2
 
-    process_torch_dataset("MultNIST", 0, location='eval')       # evaluation 0
     process_torch_dataset('CIFARTile', 1, location='eval')      # evaluation 1
     process_torch_dataset('Gutenberg', 2, location='eval')      # evaluation 2
 

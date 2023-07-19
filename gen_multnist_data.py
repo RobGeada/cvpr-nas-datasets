@@ -45,13 +45,15 @@ def proc_weights(op, combs):
     return weights
 
 
-def class_balanced_truncater(x, y, total, nclasses):
-    outx, outy = [], []
+def class_balanced_truncater(x, y, total, nclasses, metainfo = None):
+    outx, outy, outm = [], [], []
     for c in range(nclasses):
         idxs = np.random.choice(np.where(y == c)[0], size=math.floor(total/nclasses))
         outx.append(x[idxs])
         outy.append(y[idxs])
-    return np.concatenate(outx), np.concatenate(outy)
+        if metainfo is not None:
+        	outm += [metainfo[i] for i in idxs]
+    return np.concatenate(outx), np.concatenate(outy), outm
 
 
 def generate_data(op, lb, ub):
@@ -101,8 +103,8 @@ def generate_data(op, lb, ub):
     train_x, train_y = np.array(train_x, dtype=np.float32).squeeze(), np.array(train_y).squeeze()
     test_x, test_y = np.array(test_x, dtype=np.float32).squeeze(), np.array(test_y).squeeze()
 
-    train_x, train_y = class_balanced_truncater(train_x, train_y, train_n, len(train_weights))
-    test_x, test_y = class_balanced_truncater(test_x, test_y, test_n, len(test_weights))
+    train_x, train_y, metainfo = class_balanced_truncater(train_x, train_y, train_n, len(train_weights), metainfo)
+    test_x, test_y, _ = class_balanced_truncater(test_x, test_y, test_n, len(test_weights))
 
     train_shuff = np.arange(len(train_y))
     np.random.shuffle(train_shuff)
